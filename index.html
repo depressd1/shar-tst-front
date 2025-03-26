@@ -27,6 +27,10 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
   </head>
   <body>
+    <h1>TgInitData</h1>
+    <p>Данные, полученные от Telegram:</p>
+    <div id="tginitdata">Loading...</div>
+
     <h1>API Test Page</h1>
 
     <button id="loginBtn">Login</button>
@@ -37,6 +41,17 @@
     <div id="response"></div>
 
     <script>
+      if (window.Telegram && window.Telegram.WebApp) {
+        // Получаем Init Data
+        const initData = Telegram.WebApp.initData || "Нет данных";
+
+        // Выводим в div
+        document.getElementById("tginitdata").textContent = initData;
+      } else {
+        document.getElementById("tginitdata").textContent =
+          "Telegram Web Apps SDK не загружен!";
+      }
+
       // Функция для отправки запросов и отображения ответа
       async function sendRequest(url) {
         try {
