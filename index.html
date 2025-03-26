@@ -53,11 +53,35 @@
         }
       }
 
+      async function sendPostRequest(url, data = {}) {
+        try {
+          const response = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+          const responseData = await response.json();
+          document.getElementById("response ").textContent = JSON.stringify(
+            responseData,
+            null,
+            2
+          );
+        } catch (error) {
+          document.getElementById("response").textContent =
+            "Error: " + error.message;
+        }
+      }
+
       // Обработчики событий для кнопок
 
       document.getElementById("loginBtn").addEventListener("click", () => {
-        sendRequest(
-          "https://bbammptt6q5fjpb89pl0.containers.yandexcloud.net/api/auth/signin"
+        sendPostRequest(
+          "https://bbammptt6q5fjpb89pl0.containers.yandexcloud.net/api/auth/signin",
+          {
+            tgInitData: window.Telegram.Webapp.initData,
+          }
         ); // Замените на ваш API URL
       });
 
@@ -74,9 +98,7 @@
       });
 
       document.getElementById("giftCraftBtn").addEventListener("click", () => {
-        sendRequest(
-          "https://bbammptt6q5fjpb89pl0.containers.yandexcloud.net/api/gift/craft"
-        ); // Замените на ваш API URL
+        ("https://bbammptt6q5fjpb89pl0.containers.yandexcloud.net/api/gift/craft"); // Замените на ваш API URL
       });
     </script>
   </body>
