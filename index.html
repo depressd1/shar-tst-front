@@ -3,11 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>API Test</title>
+    <title>Telegram API Test</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
       body {
         font-family: Arial, sans-serif;
         margin: 20px;
+        padding: 20px;
       }
       button {
         margin: 10px;
@@ -24,96 +26,71 @@
         white-space: pre-wrap;
       }
     </style>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
   </head>
   <body>
-    <h1>TgInitData</h1>
-    <p>Данные, полученные от Telegram:</p>
+    <h1>Telegram API Test</h1>
+
+    <p><b>Telegram Init Data:</b></p>
     <div id="tginitdata">Loading...</div>
 
-    <h1>API Test Page</h1>
-
-    <button id="loginBtn">Login</button>
-    <button id="whoamiBtn">Who Am I</button>
-    <button id="giftListBtn">Gift List</button>
-    <button id="giftCraftBtn">Gift Craft</button>
+    <button id="signinBtn">Sign In</button>
+    <button id="whoamiBtn" disabled>Who Am I</button>
 
     <div id="response"></div>
 
     <script>
-      if (window.Telegram && window.Telegram.WebApp) {
-        // Получаем Init Data
-        const initData = Telegram.WebApp.initData || "Нет данных";
+      document.addEventListener("DOMContentLoaded", function () {
+        const tg = window.Telegram.WebApp;
+        const tgInitData = tg.initData || "Нет данных";
 
-        // Выводим в div
-        document.getElementById("tginitdata").textContent = initData;
-      } else {
-        document.getElementById("tginitdata").textContent =
-          "Telegram Web Apps SDK не загружен!";
-      }
+        document.getElementById("tginitdata").textContent = tgInitData;
 
-      // Функция для отправки запросов и отображения ответа
-      async function sendRequest(url) {
-        try {
-          const response = await fetch(url);
-          const data = await response.json();
-          document.getElementById("response").textContent = JSON.stringify(
-            data,
-            null,
-            2
-          );
-        } catch (error) {
-          document.getElementById("response").textContent =
-            "Error: " + error.message;
-        }
-      }
+        const API_URL =
+          "https://bbammptt6q5fjpb89pl0.containers.yandexcloud.net/api"; // ЗАМЕНИТЕ НА ВАШ API URL
+        let authToken = null;
 
-      async function sendPostRequest(url, data = {}) {
-        try {
-          const response = await fetch(url, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-          });
-          const responseData = await response.json();
-          document.getElementById("response ").textContent = JSON.stringify(
-            responseData,
-            null,
-            2
-          );
-        } catch (error) {
-          document.getElementById("response").textContent =
-            "Error: " + error.message;
-        }
-      }
+        async function sendRequest(url, method, body = null, auth = false) {
+          try {
+            const headers = { "Content-Type": "application/json" };
+            if (auth && authToken) {
+              headers["Authorization"] = `Bearer ${authToken}`;
+            }
 
-      // Обработчики событий для кнопок
+            const response = await fetch(url, {
+              method,
+              headers,
+              body: body ? JSON.stringify(body) : null,
+            });
 
-      document.getElementById("loginBtn").addEventListener("click", () => {
-        sendPostRequest(
-          "https://bbammptt6q5fjpb89pl0.containers.yandexcloud.net/api/auth/signin",
-          {
-            tgInitData: Telegram.WebApp.initData,
+            const data = await response.json();
+            document.getElementById("response").textContent = JSON.stringify(
+              data,
+              null,
+              2
+            );
+            return data;
+          } catch (error) {
+            document.getElementById("response").textContent =
+              "Error: " + error.message;
           }
-        ); // Замените на ваш API URL
-      });
+        }
 
-      document.getElementById("whoamiBtn").addEventListener("click", () => {
-        sendRequest(
-          "https://bbammptt6q5fjpb89pl0.containers.yandexcloud.net/api/auth/whoami"
-        ); // Замените на ваш API URL
-      });
+        document
+          .getElementById("signinBtn")
+          .addEventListener("click", async () => {
+            const data = await sendRequest(`${API_URL}/auth/signin`, "POST", {
+              telegramInitData: tgInitData,
+            });
 
-      document.getElementById("giftListBtn").addEventListener("click", () => {
-        sendRequest(
-          "https://bbammptt6q5fjpb89pl0.containers.yandexcloud.net/api/gift/list"
-        ); // Замените на ваш API URL
-      });
+            if (data && data.token) {
+              authToken = data.token;
+              document.getElementById("whoamiBtn").disabled = false;
+            }
+          });
 
-      document.getElementById("giftCraftBtn").addEventListener("click", () => {
-        ("https://bbammptt6q5fjpb89pl0.containers.yandexcloud.net/api/gift/craft"); // Замените на ваш API URL
+        document.getElementById("whoamiBtn").addEventListener("click", () => {
+          sendRequest(`${API_URL}/auth/whoami`, "GET", null, true);
+        });
       });
     </script>
   </body>
