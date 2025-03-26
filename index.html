@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    button {
+      margin: 10px;
+      padding: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #response {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      background-color: #f9f9f9;
+      font-family: monospace;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>API Test Page</h1>
+  
+  <button id="whoamiBtn">Who Am I</button>
+  <button id="giftListBtn">Gift List</button>
+  <button id="giftCraftBtn">Gift Craft</button>
+
+  <div id="response"></div>
+
+  <script>
+    // Функция для отправки запросов и отображения ответа
+    async function sendRequest(url) {
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        document.getElementById("response").textContent = JSON.stringify(data, null, 2);
+      } catch (error) {
+        document.getElementById("response").textContent = "Error: " + error.message;
+      }
+    }
+
+    // Обработчики событий для кнопок
+    document.getElementById("whoamiBtn").addEventListener("click", () => {
+      sendRequest("https://your-api-url/whoami"); // Замените на ваш API URL
+    });
+
+    document.getElementById("giftListBtn").addEventListener("click", () => {
+      sendRequest("https://your-api-url/gift_list"); // Замените на ваш API URL
+    });
+
+    document.getElementById("giftCraftBtn").addEventListener("click", () => {
+      sendRequest("https://your-api-url/gift_craft"); // Замените на ваш API URL
+    });
+  </script>
+</body>
+</html>
