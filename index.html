@@ -35,6 +35,8 @@
 
     <button id="signinBtn">Sign In</button>
     <button id="whoamiBtn" disabled>Who Am I</button>
+    <button id="giftCraftBtn" disabled>Gift Craft</button>
+    <button id="giftListBtn" disabled>Gift List</button>
 
     <div id="response"></div>
 
@@ -85,11 +87,18 @@
             if (data && data.token) {
               authToken = data.token;
               document.getElementById("whoamiBtn").disabled = false;
+              document.getElementById("giftCraftBtn").disabled = false;
+              document.getElementById("giftListBtn").disabled = false;
             }
           });
 
         document.getElementById("whoamiBtn").addEventListener("click", () => {
-          sendRequest(`${API_URL}/auth/whoami`, "GET", null, true);
+          sendRequest(
+            `${API_URL}/auth/whoami`,
+            "GET",
+            { telegramInitData: tgInitData },
+            true
+          );
         });
       });
     </script>
