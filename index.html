@@ -48,32 +48,68 @@
         document.getElementById("tginitdata").textContent = tgInitData;
 
         const API_URL =
-          "https://bba5p1p5hvqnch92kj3i.containers.yandexcloud.net/api"; // ЗАМЕНИТЕ НА ВАШ API URL
+          "https://bbascuungbp9rfu0skq7.containers.yandexcloud.net/api"; // ЗАМЕНИТЕ НА ВАШ API URL
         let authToken = null;
 
         async function sendRequest(url, method, body = null, auth = false) {
           try {
-            const headers = { "Content-Type": "application/json" };
+            const headers = {
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+              "Access-Control-Allow-Headers": "Content-Type, Authorization",
+            };
             if (auth && authToken) {
               headers["Authorization"] = `Bearer ${authToken}`;
+            }
+
+            console.log("Sending request to:", url);
+            console.log("Headers:", headers);
+
+            if (method !== "OPTIONS" && auth) {
+              try {
+                const preflightResponse = await fetch(url, {
+                  method: "OPTIONS",
+                  headers: {
+                    "Access-Control-Request-Method": method,
+                    "Access-Control-Request-Headers":
+                      "Authorization, Content-Type",
+                    Origin: window.location.origin,
+                  },
+                });
+                console.log("Preflight response:", preflightResponse);
+              } catch (e) {
+                console.log("Preflight error:", e);
+              }
             }
 
             const response = await fetch(url, {
               method,
               headers,
               body: body ? JSON.stringify(body) : null,
+              credentials: "include", // Включаем отправку cookies
+              mode: "cors", // Явно указываем режим CORS
             });
 
-            const data = await response.json();
-            document.getElementById("response").textContent = JSON.stringify(
-              data,
-              null,
-              2
-            );
-            return data;
+            console.log("Response status:", response.status);
+            console.log("Response headers:", response.headers);
+
+            if (response.ok) {
+              const data = await response.json();
+              responseEl.className = "success";
+              responseEl.textContent = JSON.stringify(data, null, 2);
+              return data;
+            } else {
+              const errorText = await response.text();
+              responseEl.className = "error";
+              responseEl.textContent = `Error ${response.status}: ${errorText}`;
+              throw new Error(`${response.status}: ${errorText}`);
+            }
           } catch (error) {
-            document.getElementById("response").textContent =
-              "Error: " + error.message;
+            console.error("Request failed:", error);
+            const responseEl = document.getElementById("response");
+            responseEl.className = "error";
+            responseEl.textContent = "Error: " + error.message;
           }
         }
 
@@ -86,6 +122,7 @@
 
             if (data && data.token) {
               authToken = data.token;
+              console.log(authToken);
               document.getElementById("whoamiBtn").disabled = false;
               document.getElementById("giftCraftBtn").disabled = false;
               document.getElementById("giftListBtn").disabled = false;
@@ -93,12 +130,22 @@
           });
 
         document.getElementById("whoamiBtn").addEventListener("click", () => {
-          sendRequest(
-            `${API_URL}/auth/whoami`,
-            "GET",
-            { telegramInitData: tgInitData },
-            true
-          );
+          if (!authToken) {
+            document.getElementById("response").textContent =
+              "Please sign in first";
+            return;
+          }
+          await(`${API_URL}/auth/whoami`, "GET", null, true);
+        });
+
+        document
+          .getElementById("giftCraftBtn")
+          .addEventListener("click", () => {
+            sendRequest(`${API_URL}/gifts/craft`, "GET", null, true);
+          });
+
+        document.getElementById("giftListBtn").addEventListener("click", () => {
+          sendRequest(`${API_URL}/gifts/list`, "GET", null, true);
         });
       });
     </script>
