@@ -73,24 +73,17 @@
 
         const API_URL =
           "https://bba696ane0o20k9gad7p.containers.yandexcloud.net/api";
-        let appToken = null; // Токен приложения, получаемый после signin
+        let appToken = null;
 
         async function sendRequest(url, method, body = null, auth = false) {
           try {
-            // Получаем текущий токен Яндекса из поля ввода
             const yandexToken = document.getElementById("yandex-token").value;
 
             const headers = {
               "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": "*",
-              "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-              "Access-Control-Allow-Headers": "Content-Type, Authorization",
-              // Всегда используем токен Яндекса для авторизации на стороне бэкенда
               Authorization: "Bearer " + yandexToken,
             };
 
-            // Если нужна авторизация приложения и есть токен приложения,
-            // добавляем его в отдельный заголовок
             if (auth && appToken) {
               headers["X-App-Token"] = appToken;
             }
@@ -98,28 +91,10 @@
             console.log("Sending request to:", url);
             console.log("Headers:", headers);
 
-            if (method !== "OPTIONS" && auth) {
-              try {
-                const preflightResponse = await fetch(url, {
-                  method: "OPTIONS",
-                  headers: {
-                    "Access-Control-Request-Method": method,
-                    "Access-Control-Request-Headers":
-                      "Authorization, Content-Type, X-App-Token",
-                    Origin: window.location.origin,
-                  },
-                });
-                console.log("Preflight response:", preflightResponse);
-              } catch (e) {
-                console.log("Preflight error:", e);
-              }
-            }
-
             const response = await fetch(url, {
               method,
               headers,
               body: body ? JSON.stringify(body) : null,
-              credentials: "include",
               mode: "cors",
             });
 
