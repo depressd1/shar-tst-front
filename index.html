@@ -25,6 +25,14 @@
         font-family: monospace;
         white-space: pre-wrap;
       }
+      .error {
+        background-color: #ffeeee;
+        border-color: #ff0000;
+      }
+      .success {
+        background-color: #eeffee;
+        border-color: #00ff00;
+      }
     </style>
   </head>
   <body>
@@ -44,6 +52,7 @@
       document.addEventListener("DOMContentLoaded", function () {
         const tg = window.Telegram.WebApp;
         const tgInitData = tg.initData || "Нет данных";
+        const responseEl = document.getElementById("response");
 
         document.getElementById("tginitdata").textContent = tgInitData;
 
@@ -107,7 +116,6 @@
             }
           } catch (error) {
             console.error("Request failed:", error);
-            const responseEl = document.getElementById("response");
             responseEl.className = "error";
             responseEl.textContent = "Error: " + error.message;
           }
@@ -129,24 +137,27 @@
             }
           });
 
-        document.getElementById("whoamiBtn").addEventListener("click", () => {
-          if (!authToken) {
-            document.getElementById("response").textContent =
-              "Please sign in first";
-            return;
-          }
-          await(`${API_URL}/auth/whoami`, "GET", null, true);
-        });
+        document
+          .getElementById("whoamiBtn")
+          .addEventListener("click", async () => {
+            if (!authToken) {
+              responseEl.textContent = "Please sign in first";
+              return;
+            }
+            await sendRequest(`${API_URL}/auth/whoami`, "GET", null, true);
+          });
 
         document
           .getElementById("giftCraftBtn")
-          .addEventListener("click", () => {
-            sendRequest(`${API_URL}/gifts/craft`, "GET", null, true);
+          .addEventListener("click", async () => {
+            await sendRequest(`${API_URL}/gifts/craft`, "GET", null, true);
           });
 
-        document.getElementById("giftListBtn").addEventListener("click", () => {
-          sendRequest(`${API_URL}/gifts/list`, "GET", null, true);
-        });
+        document
+          .getElementById("giftListBtn")
+          .addEventListener("click", async () => {
+            await sendRequest(`${API_URL}/gifts/list`, "GET", null, true);
+          });
       });
     </script>
   </body>
