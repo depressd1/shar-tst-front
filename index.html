@@ -86,7 +86,7 @@
               "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
               "Access-Control-Allow-Headers": "Content-Type, Authorization",
               // Всегда используем токен Яндекса для авторизации на стороне бэкенда
-              Authorization: yandexToken,
+              Authorization: "Bearer " + yandexToken,
             };
 
             // Если нужна авторизация приложения и есть токен приложения,
