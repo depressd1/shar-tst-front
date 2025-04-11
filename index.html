@@ -44,15 +44,6 @@
   <body>
     <h1>Telegram API Test</h1>
 
-    <p><b>Yandex Auth Token:</b></p>
-    <input
-      type="text"
-      id="yandex-token"
-      class="token-input"
-      placeholder="Введите токен Яндекса"
-      value="t1.9euelZqSm52az8mSz46TlJzGk8qOyO3rnpWakpqXiZGcx5zIzZ7HjM6Yk8_l8_c8LRxA-e9ZB3lh_d3z93xbGUD571kHeWH9zef1656Vmo3HkMiVj5KPmMiOnMaYl5qL7_zF656Vmo3HkMiVj5KPmMiOnMaYl5qL.VGi12ag8dWPSS5Dtexzw4Sf9WPjM_JExhsEis_mueN6MfPkKmtcLnfGwW3K1j6K3llXc1yqgvCobAWbtCDUiDw"
-    />
-
     <p><b>Telegram Init Data:</b></p>
     <div id="tginitdata">Loading...</div>
 
@@ -77,19 +68,17 @@
 
         async function sendRequest(url, method, body = null, auth = false) {
           try {
-            const yandexToken = document.getElementById("yandex-token").value;
+            const yandexToken =
+              "Bearer t1.9euelZqSm52az8mSz46TlJzGk8qOyO3rnpWakpqXiZGcx5zIzZ7HjM6Yk8_l8_c8LRxA-e9ZB3lh_d3z93xbGUD571kHeWH9zef1656Vmo3HkMiVj5KPmMiOnMaYl5qL7_zF656Vmo3HkMiVj5KPmMiOnMaYl5qL.VGi12ag8dWPSS5Dtexzw4Sf9WPjM_JExhsEis_mueN6MfPkKmtcLnfGwW3K1j6K3llXc1yqgvCobAWbtCDUiDw";
 
             const headers = {
               "Content-Type": "application/json",
-              Authorization: "Bearer " + yandexToken,
+              Authorization: yandexToken,
             };
 
             if (auth && appToken) {
               headers["X-App-Token"] = appToken;
             }
-
-            console.log("Sending request to:", url);
-            console.log("Headers:", headers);
 
             const response = await fetch(url, {
               method,
@@ -98,8 +87,8 @@
               mode: "cors",
             });
 
-            console.log("Response status:", response.status);
-            console.log("Response headers:", response.headers);
+            console.log(`Response headers: ${response.headers}`);
+            console.log(`Response status: ${response.status}`);
 
             if (response.ok) {
               const data = await response.json();
