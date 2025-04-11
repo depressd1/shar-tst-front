@@ -33,10 +33,25 @@
         background-color: #eeffee;
         border-color: #00ff00;
       }
+      .token-input {
+        width: 100%;
+        margin: 10px 0;
+        padding: 8px;
+        font-family: monospace;
+      }
     </style>
   </head>
   <body>
     <h1>Telegram API Test</h1>
+
+    <p><b>Yandex Auth Token:</b></p>
+    <input
+      type="text"
+      id="yandex-token"
+      class="token-input"
+      placeholder="Введите токен Яндекса"
+      value="t1.9euelZqSm52az8mSz46TlJzGk8qOyO3rnpWakpqXiZGcx5zIzZ7HjM6Yk8_l8_c8LRxA-e9ZB3lh_d3z93xbGUD571kHeWH9zef1656Vmo3HkMiVj5KPmMiOnMaYl5qL7_zF656Vmo3HkMiVj5KPmMiOnMaYl5qL.VGi12ag8dWPSS5Dtexzw4Sf9WPjM_JExhsEis_mueN6MfPkKmtcLnfGwW3K1j6K3llXc1yqgvCobAWbtCDUiDw"
+    />
 
     <p><b>Telegram Init Data:</b></p>
     <div id="tginitdata">Loading...</div>
@@ -57,19 +72,27 @@
         document.getElementById("tginitdata").textContent = tgInitData;
 
         const API_URL =
-          "https://bba696ane0o20k9gad7p.containers.yandexcloud.net/api"; // ЗАМЕНИТЕ НА ВАШ API URL
-        let authToken = null;
+          "https://bba696ane0o20k9gad7p.containers.yandexcloud.net/api";
+        let appToken = null; // Токен приложения, получаемый после signin
 
         async function sendRequest(url, method, body = null, auth = false) {
           try {
+            // Получаем текущий токен Яндекса из поля ввода
+            const yandexToken = document.getElementById("yandex-token").value;
+
             const headers = {
               "Content-Type": "application/json",
               "Access-Control-Allow-Origin": "*",
               "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
               "Access-Control-Allow-Headers": "Content-Type, Authorization",
+              // Всегда используем токен Яндекса для авторизации на стороне бэкенда
+              Authorization: yandexToken,
             };
-            if (auth && authToken) {
-              headers["Authorization"] = `Bearer ${authToken}`;
+
+            // Если нужна авторизация приложения и есть токен приложения,
+            // добавляем его в отдельный заголовок
+            if (auth && appToken) {
+              headers["X-App-Token"] = appToken;
             }
 
             console.log("Sending request to:", url);
@@ -82,7 +105,7 @@
                   headers: {
                     "Access-Control-Request-Method": method,
                     "Access-Control-Request-Headers":
-                      "Authorization, Content-Type",
+                      "Authorization, Content-Type, X-App-Token",
                     Origin: window.location.origin,
                   },
                 });
@@ -96,8 +119,8 @@
               method,
               headers,
               body: body ? JSON.stringify(body) : null,
-              credentials: "include", // Включаем отправку cookies
-              mode: "cors", // Явно указываем режим CORS
+              credentials: "include",
+              mode: "cors",
             });
 
             console.log("Response status:", response.status);
@@ -129,18 +152,22 @@
             });
 
             if (data && data.token) {
-              authToken = data.token;
-              console.log(authToken);
+              appToken = data.token;
+              console.log("App Token:", appToken);
               document.getElementById("whoamiBtn").disabled = false;
               document.getElementById("giftCraftBtn").disabled = false;
               document.getElementById("giftListBtn").disabled = false;
+
+              // Показываем полученный токен приложения
+              responseEl.textContent +=
+                "\n\nПолучен токен приложения: " + appToken;
             }
           });
 
         document
           .getElementById("whoamiBtn")
           .addEventListener("click", async () => {
-            if (!authToken) {
+            if (!appToken) {
               responseEl.textContent = "Please sign in first";
               return;
             }
