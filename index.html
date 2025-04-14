@@ -64,13 +64,12 @@
 
         const API_URL =
           "https://bba696ane0o20k9gad7p.containers.yandexcloud.net/api";
-        const ycToken =
-          "t1.9euelZqPzp6TkpHOk5OYlcabzM_KmO3rnpWakpqXiZGcx5zIzZ7HjM6Yk8_l8_cqcwxA-e8NDBYq_N3z92ohCkD57w0MFir8zef1656VmszNk5vGzZaQzJfKjMuVjcad7_zF656VmszNk5vGzZaQzJfKjMuVjcad.Ohksi3QVCIrWwkXaJky7zgpdy1OlK-UUjIho-Anj5SyiTXsDPwiTtrMRUDhAPgrQJrpylIeCdozI8YVcDLQpAQ";
         let appToken = null;
 
         async function sendRequest(url, method, body = null, auth = false) {
           try {
-            const yandexToken = ycToken;
+            const yandexToken =
+              "Bearer t1.9euelZqPzp6TkpHOk5OYlcabzM_KmO3rnpWakpqXiZGcx5zIzZ7HjM6Yk8_l8_cqcwxA-e8NDBYq_N3z92ohCkD57w0MFir8zef1656VmszNk5vGzZaQzJfKjMuVjcad7_zF656VmszNk5vGzZaQzJfKjMuVjcad.Ohksi3QVCIrWwkXaJky7zgpdy1OlK-UUjIho-Anj5SyiTXsDPwiTtrMRUDhAPgrQJrpylIeCdozI8YVcDLQpAQ";
 
             const headers = {
               "Content-Type": "application/json",
