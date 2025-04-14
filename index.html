@@ -77,7 +77,7 @@
             };
 
             if (auth && appToken) {
-              headers["X-Auth-Token"] = `Bearer ${appToken}`;
+              headers["X-Auth-Token"] = appToken;
             }
 
             const response = await fetch(url, {
