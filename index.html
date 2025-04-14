@@ -141,13 +141,13 @@
         document
           .getElementById("giftCraftBtn")
           .addEventListener("click", async () => {
-            await sendRequest(`${API_URL}/gifts/craft`, "GET", null, true);
+            await sendRequest(`${API_URL}/gift/craft`, "POST", null, true);
           });
 
         document
           .getElementById("giftListBtn")
           .addEventListener("click", async () => {
-            await sendRequest(`${API_URL}/gifts/list`, "GET", null, true);
+            await sendRequest(`${API_URL}/gift/list`, "GET", null, true);
           });
       });
     </script>
