@@ -141,7 +141,7 @@
         document
           .getElementById("giftCraftBtn")
           .addEventListener("click", async () => {
-            await sendRequest(`${API_URL}/gift/craft`, "POST", null, true);
+            await sendRequest(`${API_URL}/gift/craft`, "POST", {}, true);
           });
 
         document
