@@ -63,7 +63,7 @@
         document.getElementById("tginitdata").textContent = tgInitData;
 
         const API_URL =
-          "https://bba696ane0o20k9gad7p.containers.yandexcloud.net/api";
+          "https://bbam3qlah0tm43nt5o3j.containers.yandexcloud.net/api";
         let appToken = null;
 
         async function sendRequest(url, method, body = null, auth = false) {
@@ -122,7 +122,6 @@
               document.getElementById("giftCraftBtn").disabled = false;
               document.getElementById("giftListBtn").disabled = false;
 
-              // Показываем полученный токен приложения
               responseEl.textContent +=
                 "\n\nПолучен токен приложения: " + appToken;
             }
