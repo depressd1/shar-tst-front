@@ -153,7 +153,12 @@
         document
           .getElementById("giftListBtn")
           .addEventListener("click", async () => {
-            await sendRequest(`${API_URL}/gift/list`, "GET", null, true);
+            await sendRequest(
+              `https://functions.yandexcloud.net/d4esigqrrj6ds5ov4ovv`,
+              "GET",
+              null,
+              true
+            );
           });
       });
     </script>
