@@ -142,7 +142,12 @@
         document
           .getElementById("giftCraftBtn")
           .addEventListener("click", async () => {
-            await sendRequest(`${API_URL}/gift/craft`, "POST", {}, true);
+            await sendRequest(
+              `https://functions.yandexcloud.net/d4ec5o881hn3uov5d782`,
+              "POST",
+              {},
+              true
+            );
           });
 
         document
