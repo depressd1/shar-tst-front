@@ -62,8 +62,6 @@
 
         document.getElementById("tginitdata").textContent = tgInitData;
 
-        const API_URL =
-          "https://bbac59p22c7apmdtinmr.containers.yandexcloud.net/api";
         let appToken = null;
 
         async function sendRequest(url, method, body = null, auth = false) {
@@ -107,9 +105,13 @@
         document
           .getElementById("signinBtn")
           .addEventListener("click", async () => {
-            const data = await sendRequest(`${API_URL}/auth/signin`, "POST", {
-              telegramInitData: tgInitData,
-            });
+            const data = await sendRequest(
+              `https://functions.yandexcloud.net/d4er8662hdk8dfmncmu3`,
+              "POST",
+              {
+                telegramInitData: tgInitData,
+              }
+            );
 
             if (data && data.token) {
               appToken = data.token;
