@@ -112,7 +112,6 @@
                 tgInitData: tgInitData,
               }
             );
-            //2
             if (data && data.token) {
               appToken = data.token;
               console.log("App Token:", appToken);
@@ -132,7 +131,12 @@
               responseEl.textContent = "Please sign in first";
               return;
             }
-            await sendRequest(`${API_URL}/auth/whoami`, "GET", null, true);
+            await sendRequest(
+              `https://functions.yandexcloud.net/d4efffbv1a0pi2g4go93`,
+              "GET",
+              null,
+              true
+            );
           });
 
         document
