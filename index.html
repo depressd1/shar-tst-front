@@ -107,7 +107,7 @@
         document
           .getElementById("signinBtn")
           .addEventListener("click", async () => {
-            const data = await sendRequest(baseUrl + "/signin", "POST", {
+            const data = await sendRequest(apiUrl + "/signin", "POST", {
               tgInitData: tgInitData,
             });
             if (data && data.token) {
