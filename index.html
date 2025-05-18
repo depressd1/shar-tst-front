@@ -59,6 +59,8 @@
         const tg = window.Telegram.WebApp;
         const tgInitData = tg.initData || "Нет данных";
         const responseEl = document.getElementById("response");
+        const apiUrl =
+          "https://d5d605tjsigig3cog06r.trruwy79.apigw.yandexcloud.net";
 
         document.getElementById("tginitdata").textContent = tgInitData;
 
@@ -105,13 +107,9 @@
         document
           .getElementById("signinBtn")
           .addEventListener("click", async () => {
-            const data = await sendRequest(
-              `https://functions.yandexcloud.net/d4er8662hdk8dfmncmu3`,
-              "POST",
-              {
-                tgInitData: tgInitData,
-              }
-            );
+            const data = await sendRequest(baseUrl + "/signin", "POST", {
+              tgInitData: tgInitData,
+            });
             if (data && data.token) {
               appToken = data.token;
               console.log("App Token:", appToken);
