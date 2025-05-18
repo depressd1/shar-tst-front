@@ -107,7 +107,7 @@
         document
           .getElementById("signinBtn")
           .addEventListener("click", async () => {
-            const data = await sendRequest(apiUrl, "POST", {
+            const data = await sendRequest(apiUrl + "/api/signin", "POST", {
               tgInitData: tgInitData,
             });
             if (data && data.token) {
@@ -129,34 +129,19 @@
               responseEl.textContent = "Please sign in first";
               return;
             }
-            await sendRequest(
-              `https://functions.yandexcloud.net/d4efffbv1a0pi2g4go93`,
-              "GET",
-              null,
-              true
-            );
+            await sendRequest(apiUrl + "/api/whoami", "GET", null, true);
           });
 
         document
           .getElementById("giftCraftBtn")
           .addEventListener("click", async () => {
-            await sendRequest(
-              `https://functions.yandexcloud.net/d4ec5o881hn3uov5d782`,
-              "POST",
-              {},
-              true
-            );
+            await sendRequest(apiUrl + "/api/gift/craft", "POST", {}, true);
           });
 
         document
           .getElementById("giftListBtn")
           .addEventListener("click", async () => {
-            await sendRequest(
-              `https://functions.yandexcloud.net/d4esigqrrj6ds5ov4ovv`,
-              "GET",
-              null,
-              true
-            );
+            await sendRequest(apiUrl + "/api/gift/list", "GET", null, true);
           });
       });
     </script>
